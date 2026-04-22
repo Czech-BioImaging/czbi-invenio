@@ -1,7 +1,11 @@
 import * as React from "react";
+
+import { Specimen, ImageAcquisition, SamplePreparation } from "@thekarinka/czbi-ui_lib";
+
 import {
   useFormConfig,
   FormikStateLogger,
+  CreatibutorsField,
   TextField,
 } from "@js/oarepo_ui/forms";
 import { AccordionField } from "react-invenio-forms";
@@ -13,8 +17,28 @@ import PropTypes from "prop-types";
 const FormFieldsContainerComponent = ({ record }) => {
   const formConfig = useFormConfig();
   const { filesLocked } = formConfig;
+
   return (
     <React.Fragment>
+      <AccordionField
+        includesPaths={[
+          "metadata.creators",
+          "metadata.publication_date",
+          "metadata.resource_type",
+        ]}
+        active
+        label={i18next.t("Mandatory information")}
+      >
+        <CreatibutorsField
+          fieldPath="metadata.creators"
+          modal={{ addLabel: "Add", editLabel: "Edit" }}
+          schema="creators"
+        />
+
+        <TextField fieldPath="metadata.publication_date" />
+        <TextField fieldPath="metadata.resource_type.id" label="Resource type" placeholder="Type 'dataset'" />
+      </AccordionField>
+
       <AccordionField
         includesPaths={["metadata.title"]}
         active
@@ -41,6 +65,31 @@ const FormFieldsContainerComponent = ({ record }) => {
           filesLocked={filesLocked}
         />
       </AccordionField>
+
+      <AccordionField
+        includesPaths={["metadata.specimen"]}
+        active
+        label={i18next.t("Specimen")}
+      >
+        <Specimen fieldPath="metadata.specimen"></Specimen>
+      </AccordionField>
+
+      <AccordionField
+        includesPaths={["metadata.sample_preparation"]}
+        active
+        label={i18next.t("Sample preparation")}
+      >
+        <SamplePreparation fieldPath="metadata.sample_preparation"></SamplePreparation>
+      </AccordionField>
+
+      <AccordionField
+        includesPaths={["metadata.image_acquisition"]}
+        active
+        label={i18next.t("Image acquisition")}
+      >
+        <ImageAcquisition fieldPath="metadata.image_acquisition"></ImageAcquisition>
+      </AccordionField>
+
       {process.env.NODE_ENV === "development" && <FormikStateLogger />}
     </React.Fragment>
   );
